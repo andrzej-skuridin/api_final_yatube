@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.pagination import LimitOffsetPagination
 
 from api.permissions import AuthorOrReadOnly
 from api.serializers import (CommentSerializer,
@@ -11,6 +12,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [AuthorOrReadOnly]
+    pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
