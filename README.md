@@ -51,7 +51,7 @@ python3 manage.py migrate
 python3 manage.py runserver
 ```
 
-## Endpoints проекта:
+## Endpoints и функционал проекта:
 Получить публикации списком или добавить публикацию:
 ```
 http://127.0.0.1:8000/api/v1/posts/  # GET / POST 
