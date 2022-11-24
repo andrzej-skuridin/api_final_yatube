@@ -1,4 +1,6 @@
-from rest_framework import filters, viewsets
+from rest_framework import (filters,
+                            status,
+                            viewsets)
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
@@ -7,7 +9,10 @@ from api.serializers import (CommentSerializer,
                              FollowSerializer,
                              GroupSerializer,
                              PostSerializer)
-from posts.models import Comment, Follow, Group, Post
+from posts.models import (Comment,
+                          Follow,
+                          Group,
+                          Post)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -31,8 +36,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post_id = self.kwargs.get('post_id')
-        new_queryset = Comment.objects.filter(post=post_id)
-        return new_queryset
+        return Comment.objects.filter(post=post_id)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -40,8 +44,8 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticated]
-    #permission_classes = [AuthGetOrPostOnly]
+    permission_classes = [IsAuthenticated]  # не годится, он разрешает PUT и PATCH, зато работает
+    #permission_classes = [AuthGetOrPostOnly] # работает некорректно
     filter_backends = (filters.SearchFilter,)
     search_fields = ('user__username', 'following__username')
 
@@ -50,3 +54,13 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        if self.kwargs.get('following') == self.request.user:
+            # нельзя подписаться на себя
+            return status.HTTP_400_BAD_REQUEST
+        # это тоже не работает
+        if serializer.data is None:
+            return status.HTTP_400_BAD_REQUEST
+        if self.kwargs.get('following') is None:
+            return status.HTTP_400_BAD_REQUEST
+        if self.kwargs.get('following') == {}:
+            return status.HTTP_400_BAD_REQUEST

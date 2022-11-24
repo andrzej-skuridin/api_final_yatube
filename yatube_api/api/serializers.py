@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
@@ -32,17 +33,16 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
-    # этот тип поля работает только на чтение, не годится
-    # для создания поста
-    following = serializers.StringRelatedField()
-
-    # надо как-то так?
-    #following = serializers.SlugRelatedField(
-    #    many=True,
-    #    slug_field='following',
-    #    queryset=Follow.objects.filter(user=)
-    #)
+    user = serializers.SlugRelatedField(
+        many=True,
+        slug_field='username',
+        read_only=True,
+    )
+    following = serializers.SlugRelatedField(
+        many=True,
+        slug_field='following',
+        queryset=get_user_model().objects.all()
+    )
 
     class Meta:
         model = Follow

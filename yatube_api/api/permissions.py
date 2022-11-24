@@ -16,8 +16,11 @@ class AuthorOrReadOnly(permissions.BasePermission):
 
 
 class AuthGetOrPostOnly(permissions.BasePermission):
-
+    # Это разрешение почему-то работает некорректно. Например, при отправке тестами
+    # неверных данных при создании подписки вместо кода 400 возвращается 403
     def has_permission(self, request, view):
         if request.user.is_authenticated and request.method == ('GET' or 'POST'):
             return True
+        if request.user.is_authenticated and request.method != ('GET' or 'POST'):
+            return False
         raise NotAuthenticated
