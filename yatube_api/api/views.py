@@ -51,16 +51,3 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Follow.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-        if self.kwargs.get('following') == self.request.user:
-            # нельзя подписаться на себя
-            return status.HTTP_400_BAD_REQUEST
-        # это тоже не работает
-        if serializer.data is None:
-            return status.HTTP_400_BAD_REQUEST
-        if self.kwargs.get('following') is None:
-            return status.HTTP_400_BAD_REQUEST
-        if self.kwargs.get('following') == {}:
-            return status.HTTP_400_BAD_REQUEST
