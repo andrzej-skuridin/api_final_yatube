@@ -32,10 +32,18 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-    following = serializers.StringRelatedField(read_only=True)
+    user = serializers.StringRelatedField()
+    # этот тип поля работает только на чтение, не годится
+    # для создания поста
+    following = serializers.StringRelatedField()
+
+    # надо как-то так?
+    #following = serializers.SlugRelatedField(
+    #    many=True,
+    #    slug_field='following',
+    #    queryset=Follow.objects.filter(user=)
+    #)
 
     class Meta:
         model = Follow
         fields = ('following', 'user')
-        read_only_fields = ('following', 'user')

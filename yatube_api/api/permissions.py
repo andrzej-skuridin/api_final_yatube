@@ -13,3 +13,11 @@ class AuthorOrReadOnly(permissions.BasePermission):
         if obj.author == request.user or request.method == 'GET':
             return True
         raise PermissionDenied('Изменение чужого контента запрещено!')
+
+
+class AuthGetOrPostOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if request.user.is_authenticated and request.method == ('GET' or 'POST'):
+            return True
+        raise NotAuthenticated
