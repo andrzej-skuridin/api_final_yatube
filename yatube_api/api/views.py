@@ -1,5 +1,4 @@
 from rest_framework import (filters,
-                            status,
                             viewsets)
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
