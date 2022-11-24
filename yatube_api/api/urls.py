@@ -1,12 +1,10 @@
 from django.urls import include, path
-from django.conf.urls.static import static
 from rest_framework import routers
-from rest_framework.authtoken import views
+
 from api.views import (CommentViewSet,
                        FollowViewSet,
                        GroupViewSet,
                        PostViewSet)
-
 
 
 router = routers.SimpleRouter()
