@@ -42,13 +42,13 @@ class Comment(models.Model):
 class Follow(models.Model):
     user = models.ForeignKey(
         User,
-        related_name='follower',
+        related_name='user_id',
         verbose_name='Подписчик',
         on_delete=models.CASCADE,
     )
-    author = models.ForeignKey(
+    following = models.ForeignKey(
         User,
-        related_name='following',
+        related_name='following_id',
         verbose_name='Автор',
         on_delete=models.CASCADE,
     )
@@ -56,7 +56,7 @@ class Follow(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        unique_together = ['user', 'author']
+        unique_together = ['user', 'following']
 
     def __str__(self):
-        return f'{self.user} подписан на {self.author}'
+        return f'{self.user} подписан на {self.following}'
